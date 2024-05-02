@@ -44,14 +44,13 @@ export const login = async (req: Request, res: Response) => {
   const token = jwt.sign(tokenPayload, process.env.JWT_SECRET as string)
 
   res.cookie("jwt", token, {
-    httpOnly: true,
     // secure: process.env.NODE_ENV === "production",
     // httpOnly: process.env.NODE_ENV === "production",
     maxAge: 1000 * 60 * 60 * 24 * 7, //1 week
   })
   return res.status(200).json({
     ok: true,
-    message: "usuario logueado correctamente",
+    message: "sesión iniciada correctamente",
     data: tokenPayload,
   })
 }
