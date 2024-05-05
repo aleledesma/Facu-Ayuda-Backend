@@ -3,6 +3,7 @@ import userModel from "../models/user"
 import genNumCode from "../helpers/genNumCode"
 import sendCodeMail from "../helpers/sendCodeMail"
 import jwt from "jsonwebtoken"
+import majorModel from "../models/major"
 
 export const getLoginCode = async (req: Request, res: Response) => {
   const { email } = req.params
@@ -14,7 +15,7 @@ export const getLoginCode = async (req: Request, res: Response) => {
   }
   user.login_code = randomCode
   await user.save()
-  const mailResult = await sendCodeMail(email, randomCode, res)
+  const mailResult = await sendCodeMail(email, randomCode)
   if (!mailResult.ok) {
     return res
       .status(400)
@@ -53,4 +54,44 @@ export const login = async (req: Request, res: Response) => {
     message: "sesión iniciada correctamente",
     data: tokenPayload,
   })
+}
+
+export const registerUser = async (req: Request, res: Response) => {
+  const { username, email, majorId } = req.body
+  try {
+    const userSearch = await userModel.findOne({
+      $or: [{ username }, { email }],
+    })
+    if (userSearch) {
+      return res.status(400).json({
+        ok: false,
+        message: "ya existe un usuario con ese nombre o email",
+      })
+    }
+    if (majorId) {
+      const major = await majorModel.findById(majorId)
+      if (!major) {
+        return res.status(404).json({
+          ok: false,
+          message: "carrera no encontrada",
+        })
+      }
+    }
+    const newUser = await userModel.create({
+      username,
+      email,
+      major: majorId,
+      login_code: genNumCode(6),
+      roles: { admin: false, student: true },
+    })
+    return res.status(201).json({
+      ok: true,
+      message: "usuario creado correctamente, ya puedes iniciar sesión",
+      data: newUser,
+    })
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ ok: false, message: "error al crear usuario" })
+  }
 }
