@@ -5,12 +5,22 @@ import {
   getById,
   searchByName,
 } from "../controllers/major"
+import { schemaValidator } from "../middlewares/schemaValidator"
+import {
+  createMajorSchema,
+  getMajorByIdSchema,
+  searchMajorByNameSchema,
+} from "../schemas/major.schemas"
 
 const router = express.Router()
 
-router.post("/create", createMajor)
+router.post("/create", schemaValidator(createMajorSchema), createMajor)
 router.get("/", getAll)
-router.get("/:id", getById)
-router.get("/search/:name", searchByName)
+router.get("/:id", schemaValidator(getMajorByIdSchema), getById)
+router.get(
+  "/search/:name",
+  schemaValidator(searchMajorByNameSchema),
+  searchByName
+)
 
 export default router

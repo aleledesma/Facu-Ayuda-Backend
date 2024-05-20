@@ -5,12 +5,25 @@ import {
   getById,
   getByMajorId,
 } from "../controllers/assignature"
+import { schemaValidator } from "../middlewares/schemaValidator"
+import {
+  createAssignatureSchema,
+  getAssignatureByIdSchema,
+} from "../schemas/assignature.schema"
 
 const router = express.Router()
 
-router.post("/create", createAssignature)
+router.post(
+  "/create",
+  schemaValidator(createAssignatureSchema),
+  createAssignature
+)
 router.get("/", getAll)
-router.get("/:id", getById)
-router.get("/major/:id", getByMajorId)
+router.get("/:id", schemaValidator(getAssignatureByIdSchema), getById)
+router.get(
+  "/major/:id",
+  schemaValidator(getAssignatureByIdSchema),
+  getByMajorId
+)
 
 export default router
