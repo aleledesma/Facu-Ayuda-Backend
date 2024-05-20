@@ -1,13 +1,6 @@
 import { Request, Response } from "express"
 import majorModel from "../models/major"
 
-/*
-    name: {type: String, unique: true, required: true},
-    assignatures: {type: [Types.ObjectId], ref: "Assignature"},
-    duration_years: Number,
-    total_hours: Number
-*/
-
 export const createMajor = async (req: Request, res: Response) => {
   const { name, duration_years, total_hours } = req.body
   const majorSearched = await majorModel.findOne({ name })
