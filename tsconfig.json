@@ -3,7 +3,12 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "target": "ES6",
+    "module": "ES6"
   },
-  "include": ["**/*.ts", "types/**/*.ts"]
+  "include": ["src/**/*.ts", "src/types/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
