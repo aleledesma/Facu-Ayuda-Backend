@@ -13,7 +13,10 @@ connectDB()
 
 app.use(
   cors({
-    origin: "https://facu-ayuda-frontend.vercel.app/",
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://facu-ayuda-frontend.vercel.app/"
+        : "http://localhost:3000",
     credentials: true,
   })
 )
